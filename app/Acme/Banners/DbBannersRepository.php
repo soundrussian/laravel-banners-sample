@@ -1,18 +1,17 @@
 <?php namespace Acme\Banners;
 
-use \Banner;
+use Banner;
+use Config;
 
 class DbBannersRepository implements BannersRepositoryInterface
 {
 
     public function bannersFor($place)
     {
-        if ($place == 'top')
-        {
-            return Banner::where('banner_place', 'top')->limit(2)->orderByRaw('RANDOM()')->get();
-        } else {
-            return Banner::where('banner_place', 'bottom')->limit(3)->orderByRaw('RANDOM()')->get();
-        }
+        if(!in_array($place, Config::get('banners.available_places')))
+            throw new InvalidBannerPlaceException($place);
+        $limit = Config::get("banners.places.$place.placeholders");
+        return Banner::where('banner_place', $place)->limit($limit)->orderByRaw('RANDOM()')->get();
     }
 
 }
