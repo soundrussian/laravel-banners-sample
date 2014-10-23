@@ -1,18 +1,21 @@
 <?php namespace Acme\Banners\Views;
 
+use Acme\Banners\BannerPlaces;
+use Acme\Banners\BannersRepositoryInterface;
 
 class ViewsComposer
 {
 
-    public function __construct(\Acme\Banners\BannersRepositoryInterface $banners)
+    public function __construct(BannersRepositoryInterface $banners,
+                                BannerPlaces $places)
     {
         $this->banners = $banners;
+        $this->places  = $places;
     }
 
     public function compose($view)
     {
-        $parts = explode('.', $view->getName());
-        $place = end($parts);
+        $place = $this->places->nameFromView($view);
         $view->with('banners', $this->banners->bannersFor($place));
     }
 }
