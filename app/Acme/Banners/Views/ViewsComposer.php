@@ -6,16 +6,14 @@ use Acme\Banners\BannersRepositoryInterface;
 class ViewsComposer
 {
 
-    public function __construct(BannersRepositoryInterface $banners,
-                                BannerPlaces $places)
+    public function __construct(BannersRepositoryInterface $banners)
     {
         $this->banners = $banners;
-        $this->places  = $places;
     }
 
     public function compose($view)
     {
-        $place = $this->places->nameFromView($view);
+        $place = BannerPlaces::nameFromView($view);
         $view->with('banners', $this->banners->bannersFor($place));
     }
 }

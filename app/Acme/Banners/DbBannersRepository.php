@@ -14,9 +14,10 @@ class DbBannersRepository implements BannersRepositoryInterface
 
     public function bannersFor($place)
     {
-        $this->banners = $this->places->query($place)->get();
+        $this->places->setPlace($place);
+        $this->banners = $this->places->query()->get();
         $this->increaseViews();
-        $this->places->fillGaps($place, $this->banners);
+        $this->places->fillGaps($this->banners);
         return $this->banners->shuffle();
     }
 

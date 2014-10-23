@@ -6,7 +6,22 @@ use Illuminate\Database\Eloquent\Collection;
 
 class BannerPlaces
 {
-    public function viewsNames()
+    protected $place;
+
+    public function __construct($place = null)
+    {
+        $this->place = $place;
+    }
+
+    public function setPlace($place)
+    {
+        if(!in_array($place, Config::get('banners.available_places')))
+            throw new InvalidBannerPlaceException($place);
+        $this->place = $place;
+        return $this;
+    }
+
+    public static function viewsNames()
     {
         $available_views = Config::get('banners.available_places');
         $folder = Config::get('banners.views_folder');
@@ -14,54 +29,46 @@ class BannerPlaces
         return $views;
     }
 
-    public function nameFromView($view)
+    public static function nameFromView($view)
     {
         $parts = explode('.', $view->getName());
         $place = end($parts);
-        self::validatePlace($place);
         return $place;
     }
 
-    public function query($place)
+    public function query()
     {
-        self::validatePlace($place);
-        $limit = $this->limit($place);
-        return Banner::where('banner_place', $place)->limit($limit);
+        $limit = $this->limit($this->place);
+        return Banner::where('banner_place', $this->place)->limit($limit);
     }
 
-    public function fillGaps($place, Collection &$banners)
+    public function fillGaps(Collection &$banners)
     {
-        $missing = $this->limit($place) - $banners->count();
+        $missing = $this->limit($this->place) - $banners->count();
         for($i = 0; $i < $missing; $i++)
-            $banners->add($this->emptyBanner($place));
+            $banners->add($this->emptyBanner($this->place));
     }
 
-    public function emptyBanner($place)
+    public function emptyBanner()
     {
         $banner = new Banner;
         $banner->url = '/';
-        $dimensions = $this->dimensions($place);
-        $dimenstions_string = $dimensions->width.'x'.$dimensions->height;
-        $banner->content = '<img src="http://placehold.it/'.$dimenstions_string.'/DDDDDD/FFFEFE&text=Your+ad+here!"/>';
+        $dimensions = $this->dimensions($this->place);
+        $dimensions_string = $dimensions->width.'x'.$dimensions->height;
+        $banner->content = '<img src="http://placehold.it/'.$dimensions_string.'/DDDDDD/FFFEFE&text=Your+ad+here!"/>';
         return $banner;
     }
 
-    public function dimensions($place)
+    public function dimensions()
     {
         $dimension = new \stdClass;
-        $dimension->width = Config::get("banners.places.$place.width");
-        $dimension->height = Config::get("banners.places.$place.height");
+        $dimension->width = Config::get("banners.places.$this->place.width");
+        $dimension->height = Config::get("banners.places.$this->place.height");
         return $dimension;
     }
 
-    public function limit($place)
+    public function limit()
     {
-        return Config::get("banners.places.$place.placeholders");
-    }
-
-    public function validatePlace($place)
-    {
-        if(!in_array($place, Config::get('banners.available_places')))
-            throw new InvalidBannerPlaceException($place);
+        return Config::get("banners.places.$this->place.placeholders");
     }
 }
