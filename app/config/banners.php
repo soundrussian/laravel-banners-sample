@@ -5,10 +5,14 @@ return array(
 
     'places' => array(
         'top' => array(
-            'placeholders' => 2
+            'placeholders' => 2,
+            'width' => '480',
+            'height' => '150',
         ),
         'bottom' => array(
-            'placeholders' => 3
+            'placeholders' => 3,
+            'width' => '320',
+            'height' => '70'
         )
     ),
 

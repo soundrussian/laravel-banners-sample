@@ -14,9 +14,10 @@ class DbBannersRepository implements BannersRepositoryInterface
 
     public function bannersFor($place)
     {
-        $this->banners = $this->places->query($place)->orderByRaw('RANDOM()')->get();
+        $this->banners = $this->places->query($place)->get();
         $this->increaseViews();
-        return $this->banners;
+        $this->places->fillGaps($place, $this->banners);
+        return $this->banners->shuffle();
     }
 
     private function increaseViews()
