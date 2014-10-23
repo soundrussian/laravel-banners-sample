@@ -1,0 +1,5 @@
+<div class="banners-bottom">
+  @foreach($banners as $banner)
+    <a href="{{$banner->url}}" class="banner" target="_blank">{{$banner->content}}</a>
+  @endforeach
+</div>

@@ -66,18 +66,10 @@
 	</style>
 </head>
 <body>
-	<div class="banners-top">
-		@foreach($banners as $banner)
-			<a href="{{$banner->url}}" class="banner" target="_blank">{{$banner->content}}</a>
-		@endforeach
-	</div>
+	{{ View::make('banners.top') }}
 	<div class="welcome">
 		<h1>Баннеры в Laravel.</h1>
 	</div>
-	<div class="banners-bottom">
-		@foreach($bottom_banners as $banner)
-			<a href="{{$banner->url}}" class="banner" target="_blank">{{$banner->content}}</a>
-		@endforeach
-	</div>
+	{{ View::make('banners.bottom') }}
 </body>
 </html>

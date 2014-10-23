@@ -10,5 +10,7 @@ return array(
         'bottom' => array(
             'placeholders' => 3
         )
-    )
+    ),
+
+    'views_folder' => 'banners'
 );
