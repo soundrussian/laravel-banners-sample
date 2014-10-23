@@ -11,9 +11,4 @@
 |
 */
 
-Route::get('/', function()
-{
-    $banners = Banner::where('banner_place', 'top')->limit(2)->orderByRaw('RANDOM()')->get();
-    $bottom_banners = Banner::where('banner_place', 'bottom')->limit(3)->orderByRaw('RANDOM()')->get();
-	return View::make('hello', compact('banners', 'bottom_banners'));
-});
+Route::get('/', 'HomeController@showWelcome');
