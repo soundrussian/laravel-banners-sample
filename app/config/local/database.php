@@ -18,6 +18,8 @@ return array(
 	|
 	*/
 
+	'default' => 'sqlite',
+
 	'connections' => array(
 
 		'mysql' => array(
@@ -40,6 +42,12 @@ return array(
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',
+		),
+
+		'sqlite' => array(
+			'driver'   => 'sqlite',
+			'database' => __DIR__.'/../../database/development.sqlite',
+			'prefix'   => '',
 		),
 
 	),
